@@ -1,0 +1,43 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+knitr::opts_chunk$set(echo = TRUE)
+
+outdir="iwgplsoadocs"
+dir.create(outdir, showWarnings = FALSE)
+
+renderDoc = function(gpcode) {
+  basefile="gplsoa_base.Rmd"
+  rmarkdown::render(basefile, params = list(gpcode = gpcode),
+                    output_file =  paste0(outdir,'/gp_lso_catchment_report_', gpcode, '.pdf'),
+                    )
+}
+
+library(DBI)
+library(RSQLite)
+
+# connect to the sqlite file
+con = dbConnect(RSQLite::SQLite(),
+                dbname="/Users/ajh59/Dropbox/onthewight/github-openHealthDataDoodles/notebooks/nhsadmin.sqlite")
+
+EPRACCUR='epraccur'
+ccode='10L'
+
+#Find GP practices covered by the IW CCG.
+q=paste0("SELECT * FROM ",EPRACCUR," WHERE Commissioner='",ccode,"'")
+epraccur_iw = dbGetQuery(con, q)
+
+#For each practice, generate the report. The 1 value specifies the margin: apply renderDoc to each row
+apply(epraccur_iw["Organisation Code"],1, renderDoc)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).

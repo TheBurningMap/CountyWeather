@@ -1,0 +1,54 @@
+---
+title: "Interactive"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+myPlotFun <- function(distribution, range, title) {
+  randomFun <- switch(distribution, gaussian = rnorm, uniform = runif)
+  myData <- data.frame(
+    year = seq(range[1], range[2]),
+    value = randomFun(n = diff(range) + 1)
+  )
+  combineWidgets(
+    ncol = 2, colsize = c(2, 1),
+    dygraph(myData, main = title),
+    combineWidgets(
+      plot_ly(x = myData$value, type = "histogram"),
+      paste(
+        "The graph on the left represents a random time series generated using a <b>",
+        distribution, "</b>distribution function.<br/>",
+        "The chart above represents the empirical distribution of the generated values."
+      )
+    )
+  )
+  
+}
+
+manipulateWidget(
+  myPlotFun(distribution, range, title),
+  distribution = mwSelect(choices = c("gaussian", "uniform")),
+  range = mwSlider(2000, 2100, value = c(2000, 2100), label = "period"),
+  title = mwText()
+)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
