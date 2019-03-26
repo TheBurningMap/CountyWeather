@@ -9,10 +9,6 @@ output:
     toc: yes
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
-
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
-
 ```{r fig.align="center", fig.height=4, fig.lp="figure ", fig.width=8}
 #install.packages("countyweather")
 options("noaakey" = "eNCBbAkotcjkFoISmIiihlnDBTHYaDWM")
